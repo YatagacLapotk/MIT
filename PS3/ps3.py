@@ -179,10 +179,10 @@ def update_hand(hand, word):
     """
     new_hand = hand.copy()
     for key in word.lower():
-        if key not in hand.keys():
+        if key in hand.keys() and new_hand[key]>1:
             new_hand[key]-=1
         else:
-            new_hand[key]-=1
+            new_hand.pop(key)
     return new_hand
 
 #
@@ -297,9 +297,25 @@ def play_hand(hand, word_list):
     # so tell user the total score
 
     # Return the total score as result of function
-
-
-
+    total_score = 0
+    while calculate_handlen(hand) > 0:
+        print("Current hand: ")
+        display_hand(hand)
+        user = input("Enter word, or '!!' to indicate that you are finished: ")
+        if user == "!!":break
+        else:
+            if is_valid_word(user,hand,word_list):
+                word_score = get_word_score(user,calculate_handlen(hand))
+                total_score+=word_score
+                print(f" '{user}' earned {word_score} points. Total: {total_score} points ")   
+            else:
+                print("That is not a valid word. Please choose another word. ")
+            hand = update_hand(hand,user)
+    if user == "!!":
+        print(f"Total score: {total_score}")       
+    else:
+        print(f"Ran out of letters. Total score for this hand: {total_score}") 
+    return total_score
 #
 # Problem #6: Playing a game
 # 
@@ -331,8 +347,14 @@ def substitute_hand(hand, letter):
     letter: string
     returns: dictionary (string -> int)
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
+    abc = VOWELS+CONSONANTS
+    new_hand = hand.copy()
+    if letter in hand.keys():
+        new_letter = random.choice(abc.replace(letter,""))
+        new_hand[new_letter] = new_hand.get(new_letter,0)+hand[letter]        
+        new_hand.pop(letter)
+    return new_hand
+
        
     
 def play_game(word_list):
@@ -365,11 +387,41 @@ def play_game(word_list):
 
     word_list: list of lowercase strings
     """
-    
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
-    
-
-
+    total_score = 0
+    replay_hand = False
+    hand_number = int(input("Enter a total number of hands: "))
+    while hand_number > 0:
+        hand_score = 0
+        check_score = 0
+        sub_count = 0
+        hand = deal_hand(HAND_SIZE)
+        while replay_hand is False and sub_count==0:
+            print("Current hand: ")
+            display_hand(hand)
+            subsitute = input("Do you want to subsitute a letter (yes/no): ")
+            if subsitute == "yes":
+                sub_letter = input("Which letter would you like to replace: ")
+                hand = substitute_hand(hand,sub_letter)
+                sub_count+=1
+            else:break
+        check_score+=play_hand(hand,word_list)
+        print("------------------------------")
+        if replay_hand is False:
+            replay = input("Would you like to replay hand(yes/no): ")
+            if replay == "yes":
+                x = play_hand(hand,word_list)
+                if x>check_score:
+                    total_score+=x
+                else:
+                    total_score+=check_score
+            else:
+                total_score+=check_score    
+        print("------------------------------")
+        hand_number-=1
+    print(f"Total score of game: {total_score}")
+    return total_score
+        
+        
 #
 # Build data structures used for entire session and play game
 # Do not remove the "if __name__ == '__main__':" line - this code is executed
