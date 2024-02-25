@@ -22,9 +22,12 @@ def get_permutations(sequence):
     Note: depending on your implementation, you may return the permutations in
     a different order than what is listed here.
     '''
-
-    pass #delete this line and replace with your code here
-
+    if len(sequence) == 1:
+        return [sequence]
+    else:
+        def combination():
+            first = sequence.replace(sequence[0],'')
+        pass
 if __name__ == '__main__':
 #    #EXAMPLE
 #    example_input = 'abc'
