@@ -25,9 +25,34 @@ def get_permutations(sequence):
     if len(sequence) == 1:
         return [sequence]
     else:
-        def combination():
-            first = sequence.replace(sequence[0],'')
-        pass
+        sequence_length = len(sequence)
+        first_element = sequence[0]
+        sequence = sequence[1::]
+        permutation_list = get_permutations(sequence)
+        temp_list = permutation_list[:]
+        
+        for element in temp_list:
+            k = 0
+            first_element_added = first_element + element
+            elements = list(first_element_added)
+            
+            if first_element_added not in permutation_list:
+                permutation_list.append(first_element_added)
+            
+            for j in range(sequence_length - 1):
+                (elements[k],elements[k + 1]) = (elements[k + 1],elements[k])
+                k += 1
+                perm_temp = ''.join(elements)
+                
+                if perm_temp not in permutation_list:
+                    permutation_list.append(perm_temp)
+                    
+            permutation_list.remove(element)
+                
+        return permutation_list
+
+
+
 if __name__ == '__main__':
 #    #EXAMPLE
 #    example_input = 'abc'
