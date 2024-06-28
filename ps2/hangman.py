@@ -11,7 +11,7 @@
 import random
 import string
 
-WORDLIST_FILENAME = r"/Users/yatagaclapotk/Desktop/MIT/ps2/words.txt"
+WORDLIST_FILENAME = r"/Users/yatagaclapotk/Desktop/Genel Çalişmalar/MIT/ps2/words.txt"
 
 
 def load_words():
